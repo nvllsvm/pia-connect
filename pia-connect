@@ -1,0 +1,101 @@
+#!/bin/python
+
+import json
+import argparse
+import sys
+import os
+
+class vpnServer:
+    def __init__(self, name, address):
+        self.name = name
+        self.address = address
+
+
+def parseJSON(f_serverList):
+    serverFile = open(f_serverList)
+    serverJSON = json.load(serverFile)
+
+    serverList = []
+    for x in serverJSON["server"]:
+        serverList.append(vpnServer(x["name"],x["address"]))
+
+    return serverList
+
+
+def readOptionsFile(f_options):
+    optionsFile = open(f_options, 'r')
+
+    formattedFile = (line.strip() for line in optionsFile)
+
+    optionString = ''
+    for line in formattedFile:
+        option = ' --' + line
+        optionString += option
+
+    return optionString
+
+
+def argumentParsing():
+    parser = argparse.ArgumentParser(description='VPN server selection tool')
+
+    parser.add_argument('-p', metavar='PROTOCOL',help='protocol',default='udp')
+    parser.add_argument('-P', metavar='PORT',type=int,help='port',default='1194')
+    parser.add_argument('-s', metavar='SERVER-ID',type=int,help='server-id')
+
+    args = parser.parse_args() 
+
+    port = args.P
+    protocol = args.p
+    serverId = args.s
+
+    return (protocol, port, serverId)
+
+
+if __name__ == "__main__":
+    (protocol, port, server) = argumentParsing()
+    piaConfigFiles = 'https://www.privateinternetaccess.com/openvpn/openvpn.zip'
+
+    # found the ports in the PIA Android app
+    protocolPortDict = {'udp': [53,1194,8080,9201]
+                       ,'tcp': [80,110,443]}
+
+    if protocol not in protocolPortDict:
+        print("Invalid protocol: " + protocol)
+        sys.exit()
+
+    # ports match what is used in the PIA Android app
+    if port not in protocolPortDict[protocol]:
+        print("Invalid port for " + protocol + ": " + str(port))
+        sys.exit()
+    
+    workingDir = os.path.dirname(os.path.realpath(__file__))
+
+    f_serverList = workingDir + '/servers.json'
+    f_options = workingDir + '/config'
+
+    serverList = parseJSON(f_serverList)
+
+    optionWidth = len(str(len(serverList) + 1))
+
+    for server in serverList:
+        unformattedOption = str(serverList.index(server) + 1)
+        option = unformattedOption.rjust(optionWidth)
+
+        name = server.name
+
+        print(option + " : " + name)
+
+    serverOpt = int(input("Which one? ")) - 1
+
+    if not (serverOpt >= 0 & serverOpt < len(serverList)):
+        print("wtf")
+        sys.exit()
+
+
+    server = serverList[serverOpt].address
+    protocolArg = ' --proto ' + protocol
+    serverArg = ' --remote ' + server + ' ' + str(port)
+
+    openvpnArgs = 'cd ' + workingDir + ' && sudo openvpn' + protocolArg + serverArg + readOptionsFile(f_options) 
+    print(openvpnArgs)
+    os.system(openvpnArgs)

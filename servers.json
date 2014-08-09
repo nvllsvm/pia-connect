@@ -1,0 +1,57 @@
+{"server": [
+	{ "name": "CA North York",
+	  "address": "ca.privateinternetaccess.com" 
+	},
+	{ "name": "CA Toronto",
+	  "address": "ca-toronto.privateinternetaccess.com" 
+	},
+	{ "name": "France",
+	  "address": "france.privateinternetaccess.com" 
+	},
+	{ "name": "Germany",
+	  "address": "germany.privateinternetaccess.com"
+	},
+	{ "name": "Hong Kong",
+	  "address": "hk.privateinternetaccess.com"
+	},
+	{ "name": "Netherlands",
+	  "address": "nl.privateinternetaccess.com"
+	},
+	{ "name": "Romania",
+	  "address": "ro.privateinternetaccess.com"
+	},
+	{ "name": "Sweden",
+	  "address": "sweden.privateinternetaccess.com"
+	},
+	{ "name": "Switzlerand",
+	  "address": "swiss.privateinternetaccess.com"
+	},
+	{ "name": "UK London",
+	  "address": "uk-london.privateinternetaccess.com"
+	},
+	{ "name": "UK Southampton",
+	  "address": "uk-southampton.privateinternetaccess.com"
+	},
+	{ "name": "US California",
+	  "address": "us-california.privateinternetaccess.com"
+	},
+	{ "name": "US East",
+	  "address": "us-east.privateinternetaccess.com"
+	},
+	{ "name": "US Florida",
+	  "address": "us-florida.privateinternetaccess.com"
+	},
+	{ "name": "US Midwest",
+	  "address": "us-midwest.privateinternetaccess.com"
+	},
+	{ "name": "US Seattle",
+	  "address": "us-seattle.privateinternetaccess.com"
+	},
+	{ "name": "US Texas",
+	  "address": "us-texas.privateinternetaccess.com"
+	},
+	{ "name": "US West",
+	  "address": "us-west.privateinternetaccess.com"
+	}
+	]
+}
