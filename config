@@ -1,0 +1,19 @@
+client
+dev tun
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+ca ./cert/ca.crt
+tls-client
+remote-cert-tls server
+auth-user-pass
+comp-lzo
+verb 1
+reneg-sec 0
+crl-verify ./cert/crl.pem
+auth-user-pass login
+auth-nocache
+script-security 2
+up ./resolv/update-resolv-conf
+down ./resolv/update-resolv-conf
