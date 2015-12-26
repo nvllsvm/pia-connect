@@ -2,6 +2,7 @@ client
 dev tun
 resolv-retry infinite
 nobind
+mute-replay-warnings
 persist-key
 persist-tun
 ca ./cert/ca.crt
