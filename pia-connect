@@ -9,7 +9,7 @@ def get_argument_string():
 
     argument_string = ''
     for line in config_file:
-        argument_string += ' --' + line.strip()
+        argument_string += ' --{0}'.format(line.strip())
 
     return argument_string
 
@@ -27,11 +27,11 @@ def argument_parsing():
     protocol = args.p
 
     if protocol not in settings.protocol_ports:
-        print("Invalid protocol: " + protocol)
+        print('Invalid protocol: {0}'.format(protocol))
         sys.exit()
 
     if port not in settings.protocol_ports[protocol]:
-        print("Invalid port for " + protocol + ": " + str(port))
+        print('Invalid port for {0}: {1}'.format(protocol, port))
         sys.exit()
 
     return (protocol, port)
@@ -48,16 +48,16 @@ def main():
         server_id += 1
         server_id_map[server_id] = server
 
-        print(str(server_id) + " : " + server)
+        print('{0} : {1}'.format(server_id, server))
 
     server_option = int(input("Which one? ")) 
 
     server_address = settings.servers[server_id_map[server_option]]
-    openvpn_server_address = ' --remote ' + server_address + ' ' + str(port)
+    openvpn_server_address = '--remote {0} {1}'.format(server_address, port)
 
-    openvpn_protocol = ' --proto ' + protocol
+    openvpn_protocol = '--proto {0}'.format(protocol)
 
-    openvpn_command = 'clear && cd ' + working_dir + ' && sudo openvpn' + openvpn_protocol + openvpn_server_address + get_argument_string() 
+    openvpn_command = 'clear && cd {0} && sudo openvpn {1} {2} {3}'.format(working_dir, openvpn_protocol, openvpn_server_address, get_argument_string())
 
     os.system(openvpn_command)
 
