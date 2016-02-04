@@ -1,8 +1,10 @@
 #!/usr/bin/python
-import settings
 import argparse
-import sys
 import os
+import sys
+
+import settings
+
 
 def get_argument_string():
     config_file = open(settings.openvpn_config_file, 'r')
@@ -15,13 +17,19 @@ def get_argument_string():
 
 
 def argument_parsing():
-    """ Todo: add argument to enable server selection """
     parser = argparse.ArgumentParser(description='VPN server selection tool')
 
-    parser.add_argument('-p', metavar='PROTOCOL',help='protocol',default=settings.default_protocol)
-    parser.add_argument('-P', metavar='PORT',type=int,help='port',default=settings.default_port)
+    parser.add_argument('-p',
+                        metavar='PROTOCOL',
+                        help='protocol',
+                        default=settings.default_protocol)
+    parser.add_argument('-P',
+                        metavar='PORT',
+                        type=int,
+                        help='port',
+                        default=settings.default_port)
 
-    args = parser.parse_args() 
+    args = parser.parse_args()
 
     port = args.P
     protocol = args.p
@@ -40,25 +48,30 @@ def argument_parsing():
 def main():
     (protocol, port) = argument_parsing()
 
-    working_dir = os.path.dirname(os.path.realpath(__file__))
-
-    server_id = 0
     server_id_map = {}
-    for server in sorted(settings.servers.keys()):
-        server_id += 1
+    for server_id, server in enumerate(sorted(settings.servers), start=1):
         server_id_map[server_id] = server
 
         print('{0} : {1}'.format(server_id, server))
 
-    server_option = int(input("Which one? ")) 
+    server_option = int(input("Which one? "))
 
     server_address = settings.servers[server_id_map[server_option]]
-    openvpn_server_address = '--remote {0} {1}'.format(server_address, port)
 
-    openvpn_protocol = '--proto {0}'.format(protocol)
+    working_dir = os.path.dirname(os.path.realpath(__file__))
 
-    openvpn_command = 'clear && cd {0} && sudo openvpn {1} {2} {3}'.format(working_dir, openvpn_protocol, openvpn_server_address, get_argument_string())
+    pre_command = 'clear && cd {0}'.format(working_dir)
+    os.system(pre_command)
 
+    openvpn_command = ('sudo openvpn --proto {protocol}'
+                       ' --remote {server} {port}'
+                       ' {additional_args}'
+                       ''.format(protocol=protocol,
+                                 server=server_address,
+                                 port=port,
+                                 additional_args=get_argument_string()))
+
+    print(openvpn_command)
     os.system(openvpn_command)
 
 
